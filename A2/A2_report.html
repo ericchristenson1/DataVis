@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Vis & Society Assignment 2</title>
+	<link rel="stylesheet" href="https://vis-society.github.io/assignments/report.css" />
+</head>
+
+<body>
+	<header>
+		<h1>
+			<small>Assignment 2</small>
+			Exploratory Data Analysis
+		</h1>
+
+		<p>
+			<strong>Eric Christenson</strong> — <em>ericchri@mit.edu</em>
+		</p>
+	</header>
+	<main>
+		<section>
+			<h2>Subtheme: Speculation</h2>
+
+			<h3>Overall Analysis Questions</h3>
+			<ol>
+				<li>How has the value of homes changed over time?</li>
+				<p>
+					Everyone knows that home values have generally increased over time, I want
+					to use this question to look at and validate that the data makes sense and matches
+					our intution. Will we see the great recession appear?
+				</p>
+				<li>Are all homes being bought in the same neighborhoods?</li>
+				<p>
+					I read the Homes for Profit article. I am curious 
+					if we will see that most homes bought to be flipped are in the
+					same neighborhoods. I know that most are BIPOC but would like to confirm
+					that geographically these are all colocated
+				</p>
+				<li>Are the same homes flipped over and over?</li>
+				<p>
+					I lived in New York before Boston, and I noticed that a few buildings
+					seemed to be flipped and sold a few times in just a few years. I wonder if
+					the same homes in Boston are being invested in and flipped or if this is a 
+					one and done process
+				</p>
+				<li>Are gentrifying neighborhoods experiencing a lot of flips?</li>
+				<p>
+					I grew up in Boston so I am familiar with the neighborhood known as Southie.
+					Growing up, this was a tough area, but has become full of young professionals recently.
+					Income is increasing, migration is happening, and so it is probably considered a good place to invest. Are 
+					investments coming in here and are we seeing a lot of flipping as a result?
+				</p>
+				<li>What does the cash discount look like?</li>
+				<p>
+					The Homes for profit article mentioned that investors are paying less in cash than someone would 
+					pay with a loan. This means that investors can undercut homeowners by paying in cash and
+					end up paying less for the property than listed price. How much less?
+					Are all investors paying in cash or just large institutions?
+				</p>
+			</ol>
+		</section>
+
+		<section>
+			<h2>Discoveries & Insights</h2>
+			<h2>Question 1: How has the value of homes changed over time?</h2>
+			<p>
+				We start by addressing question 1, how do home values look over time to get a general sense of the data. 
+				I start with both average annual value and previous sales price to compare both. **I had ChatGPT explain to me 
+				what average annual value meant and why it might be useful as I found this concept not intuitive.**
+				It turns out that average annual value more or less represents average dollar volume per year and more accurately
+				reflects market activity than average home price. Also note that I came back and created the same graph with price, I found
+				this tracked almost perfectly with previous sales price, all the same trends were visible.
+			</p>
+			<figure>
+				<img src="Images/valuesovertime.png" alt="Average annual value and prev sales price over time" />
+				<figcaption>
+					Average annual value and previous sales price both increase over time
+				</figcaption>
+			</figure>
+			<p>
+				We see that average annual value does not show
+				any decline in market activity due to the great recession, which is concerning to me. This could indicate that houses
+				were still being bought by investors. We see a big trend upwards in the average of previous house sales price. Notably,
+				the recession is captured by previous sales prices, so houses were being sold at a discount. Perhaps more houses were being
+				bought up in this discount and that explains the discrepancy. We also see a drop in previous sales price after COVID which
+				aligns with my expectations of the dataset. My biggest takeaway was why is there such a huge increase in average value in 2017?
+				This represents a ton of market activity in 2017 or maybe a huge transaction. 
+			</p>
+			<figure>
+				<img src="Images/amount_discrep_by_type.png" alt="Average annual value discrepancy by investor type" />
+				<figcaption>
+				Average annual value by investor type with outlier point indicated
+				</figcaption>
+			</figure>
+			<p>
+				What we see here is pretty interesting, volatility in average value by investor type is 
+				almost solely coming from institutional investments. I am going to dive into what might have caused this.
+			</p>
+			<figure>
+				<img src="Images/avgannualissue.png" alt="2017 issue values" />
+				<figcaption>
+				Largest average annual value properties for institutional investors in 2017
+				</figcaption>
+			</figure>
+			<p>
+				This looks to me like a data issue! We see all institutional values here, and their addresses notably each until
+				at 160 federal st has a value of 130 million. This can't be correct or i am wrongly interpreting the value and 
+				average annual value marks the whole transaction. Each individual unit probably should not be priced like this. I wanted 
+				to explore average annual value earlier, but for the rest of the exploration will stick to sale price as it is easier to
+				interpret. 
+			</p>
+			<figure>
+				<img src="Images/lastsaleprice.png" alt="last sale price over time" />
+				<figcaption>
+				We see the sale price of each property filtered for institutions in 2017 over 150 million
+				</figcaption>
+			</figure>
+			<p>
+				This confirms that each unit is priced super high. I googled these units actually to verify and it seems
+				this transaction is potentially duplicated. I will now move on to look at my second question, are all homes being bought
+				in the same neighborhood? In order to remove these potentially faulty units, the rest of my exploration will focus on
+				residential and family homes, not commercial properties.
+			</p>
+			<h2>Question 2: Are all homes being bought in the same neighborhoods?</h2>
+
+			<figure>
+				<img src="Images/zipcodes.png" alt="zipcode of each sale" />
+				<figcaption>
+				Each transaction sorted by zipcode. Color represents amount of transactions.
+				</figcaption>
+			</figure>
+			<p>
+				Immediately what we see here is there are too many zipcodes, one outlier south and a few zipcodes that are just
+				dots. I did some googling and discovered the some of the dots are valid zipcodes but others are just commercial
+				property specific groups. I remove the outlier and commercial property sales as I would like to focus on residential
+				properties, this includes condos, single family homes, etc...
+			</p>
+
+			<figure>
+				<img src="Images/homesalesspread.png" alt="Amount of homes sold and average price" />
+				<figcaption>
+					Amount of homes sold and average sale price across Boston
+				</figcaption>
+			</figure>
+			<p>
+				I did a bit of cleaning here, I grouped a few zip codes together to improve visibility, I removed outlier areas,
+				if only one or two homes was sold etc, and I left only residential properties. The results are fascinating to me and
+				not what I expected as someone who grew up in the area. Southie and seaport had almost no sales recorded. 
+				Both of these neighborhoods have undergone tremendous change in the past twenty years. With Seaport the results are okay
+				because almost every change there has been commmercial. I will now try to look into Southie and why it has no sales...Note
+				also that in this screenshot I was playing around with a construction year filter that had no impact on the result. I found 
+				that year is accurate and yearbuilt can have outlier values.
+			</p>
+			<p>
+				It is pretty evident that most of the investment in residential properties is happening in downtown, north end,
+				and backbay neighborhoods. The more western neighborhoods are seeing less residential property sales. This is pretty
+				expected I would say, I think most of the housing really in boston is in these neighborhoods where we see the most
+				sales. The average price interestingly, is closer between neighborhoods than I thought it would be. I want to move onto
+				my next question, lets start by looking at the types of sellers we see.
+			</p>
+
+
+
+
+			<h2>Question 3: Who is selling houses?</h2>
+			<figure>
+				<img src="Images/sellerinfo.png" alt="seller info categories" />
+				<figcaption>
+				Amount of different types of sellers seen in the market over time
+				</figcaption>
+			</figure>
+			<p>
+				I started by graphing all the seller metrics over time to see what market trends might be
+				happening. What i see here is that there aren't any null years listed which is a good sign.
+				All the data looks pretty clean. What is really interesting is the sell side flip
+				value is close to 0 until 2010 and then skyrockets. Either people started flipping more because of the recession
+				or some sort of flipping law changed or flipping just became more popular than building new.
+				I am not too worried that there are errors here in the data, everything seems pretty well
+				filled in. I am going to try to figure out who is does this flipping.
+			</p>
+
+
+			<figure>
+				<img src="Images/investortype.png" alt="type of investor buying flipped properties" />
+				<figcaption>
+				Types of investors selling flipped properites
+				</figcaption>
+			</figure>
+				<p>
+					We see interestingly that non investors are selling the majority of flipped properties.
+					I guess this actually makes sense, most people buying flipped apartments are just normal
+					people looking to live. When we flip this and see what people are selling flipped properties,
+					that graph looks almosy exactly the same as this one... That to me is more interesting, I 
+					would have thought investors would be selling these flipped properties. Lets make sure that
+					non investors are actually all who we think they are. I will drill into the non investor category.
+				</p>
+			<figure>
+				<img src="Images/bubblenoninvbuys.png" alt="Property purchases by non investors" />
+				<figcaption>
+				Property purchases by non investors are primarily condominiums
+				</figcaption>
+			</figure>
+				<p>
+					What we see here is that most non investor sales are condominiums or residential (gray and blue),
+					this confirms that we are seeing what we want here. There are a few outliers, such as a single live theatre
+					purchase, but none of these are ridculously large compared to the home prices, and they are very limited in amount. The results
+					we see here are what we expected, these are noninvestors buying properties and selling them. I think the downside
+					of flipping is you are essentially taking up housing someone else could use for a while. I am curious what
+					the horizon is on these flips? Are these flips that people are doing taking up a lot of housing?
+				</p>
+
+
+			<h2>Question 4: Are these non-investors flipping quickly?</h2>
+			<p>
+				The pie chart below describes the timelines of the different noninvestor flips. The 0 for non flips makes sense, because
+				we already filtered to flippers selling. We see the majority of flips are taking 12-24 months! This means that the decisions
+				these non investors are making to flip houses is taking up housing for a really long amount of time. around 600/900 total flips
+				by non investors are taking this long. This means 1-2 years that a condo or apartment is off the market and unliveable.
+			</p>
+
+			<figure>
+				<img src="Images/flippers.png" alt="flippers" />
+				<figcaption>
+				Proportion of flip term lengths for non investors selling properties.
+				</figcaption>
+			</figure>
+
+			<h2>Question 5: Who is buying houses?</h2>
+
+			<p>
+				Looking back at my research so far, I think I skipped a bit over who is actually doing all the buying. I found the potential
+				data error with commercial properties, but I want to understand the breakdown of buyers for residential properties more. I understand
+				that non investors are almost solely buying these properties, but are they making up the majority of purchasers?
+			</p>
+
+			<figure>
+				<img src="Images/resinvestors.png" alt="residential investor types" />
+				<figcaption>
+				Non investors make up the vast majority of residential property buyer
+				</figcaption>
+			</figure>
+
+			<p>
+				Thankfully, we still live in a world where non investors are buying the majority of residential buildings. People are buying
+				their own homes, or buying houses to flip (probably better than this being done at commercial scale). I am a bit skeptical that
+				this is static over time, given we hear how people cannot afford houses anymore. Let us take a further look
+				at the investor portfolio.
+			</p>
+
+			<figure>
+				<img src="images/investortypetime.png" alt="investor type over time" />
+				<figcaption>
+				The percent of residential properties purchased by non investors is decreasing over time.
+				</figcaption>
+			</figure>
+
+			<p>
+				We can clearly make out in this figure that the percent of properties being bought by non investors is dropping over
+				time. We see the steepest decline occur in the years following the great recession. There is a uptrend post COVID, but
+				this is probably not likely to stay. I recall hearing about so many peple buying a house post covid because home mortgage
+				rates were low but this has subsided in recent years. Most of the investor uptick can be accounted for by small investors.
+				**As a side note, ChatGPT aided me in creating this plot, showing me how to selectively mark and suggesting
+				a switch to address count as a unique property identifier. (Although I looked at row count from Tableau 
+				side by side and amounts were exactly the same)
+			</p>
+			<p>
+				This finding, that non investors are buying less of the properties over time is consistent with what we see in articles
+				about the housing crisis. Investors are coming in and raising rents on families. The article I read described homes being
+				bought more and more away from BIPOC families by investors and this graphic really seems to support that point with evidence.
+			</p>
+
+
+			<h2>Additional EDA/cleaning issues</h2>
+			<figure>
+				<img src="Images/yearbuilt.png" alt="yearbuilt outliers" />
+				<figcaption>
+				Outliers found in the yearbuilt category
+				</figcaption>
+			</figure>
+			<p>I wanted to note an outlier set I found that did not impact any of my research questions. I found that yearbuilt
+				was 0 for 1200 of the residential properties. I found this while just investigating around for data issues. The year
+				data was full and clean for every sales transaction.
+			</p>
+		</section>
+
+		<section>
+			<h2>Summary</h2>
+
+			<p>
+				In this EDA exercise, we explored a property sales dataset. We started with understanding market trends
+				and value over time. We then dug into where homes are being sold and who is selling. We found most homes
+				are being sold in the same neighborhoods for pretty similar prices. We looked at property flipping
+				from investors and non investors. We found that noninvestors are doing most of the home flipping
+				and that these flips are taking 1-2 years to complete. Finally, we looked at who is buying houses 
+				and some trends we see in this over time. We find that investors are buying more houses over time and
+				non investor purchases are dropping.
+			</p>
+		</section>
+	</main>
+</body>
+</html>
